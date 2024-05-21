@@ -220,6 +220,41 @@ class Session():
             print(matiere.name,end=' ')
         print("]")
 
+
+matieres = []
+
+with open('Matières.csv', mode='r', newline='') as csvfile:
+    csvreader = csv.DictReader(csvfile)
+    for row in csvreader:
+        matiere = Matiere(
+            name=row['nom'],
+            duree=int(row['duree']),
+            listeSalles=[],
+            aretes=[],
+            degreSaturation=0
+        )
+        matieres.append(matiere)
+
+promotions = []
+
+with open('Promotions.csv', mode='r', newline='') as csvfile:
+    csvreader = csv.DictReader(csvfile)
+    for row in csvreader:
+        liste_matieres_noms = row['liste_matieres'].split(';')
+        liste_matieres = [matiere for matiere in matieres if matiere.name in liste_matieres_noms]
+        promotion = Promotion(
+            name=row['nom'],
+            nbPlaces=int(row['nb_eleves']),
+            listeMatiere=liste_matieres
+        )
+        promotions.append(promotion)
+
+for matiere in matieres:
+    matiere.afficherMatiere()
+
+for promotion in promotions:
+    promotion.afficherPromotion()
+
 ######## main ############
 
 #ici on introduira le code de Sarah et Charlotte qui liront le csv et fourniront une liste de salles, une liste de matières et une liste de promotions. 
