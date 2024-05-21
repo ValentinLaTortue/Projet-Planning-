@@ -1,11 +1,11 @@
 
 class Matiere():
-    def __init__(self,name,duree,listeSalles):
+    def __init__(self,name,duree,listeSalles, aretes, degreSaturation):
         self.name=name
         self.duree=duree
         self.listeSalles=listeSalles
 
-    #getter setter et toString
+    #getter setter et affichage
     @property
     def name(self):
         return self._name
@@ -31,6 +31,30 @@ class Matiere():
         del self._duree
 
     @property
+    def degreSaturation(self):
+        return self._degreSaturation
+
+    @degreSaturation.setter
+    def degreSaturation(self,value):
+        self._degreSaturation = int(value)
+
+    @degreSaturation.deleter
+    def degreSaturation(self):
+        del self._degreSaturation
+
+    @property
+    def aretes(self):
+        return self._aretes
+
+    @aretes.setter
+    def aretes(self,value):
+        self._aretes = int(value)
+
+    @aretes.deleter
+    def aretes(self):
+        del self._aretes
+
+    @property
     def listeSalles(self):
         return self._listeSalles
 
@@ -45,9 +69,14 @@ class Matiere():
     def afficherMatiere(self):
         print(self.name,end=', ')# end='' sert à ne pas retrouner à la ligne avec le print
         print(self.duree,end=', ')
+        print(self.degreSaturation,end=', ')
         print("[ ",end='')
         for salle in self.listeSalles:
             print(salle.name,end=' ')
+        print("]")
+        print("[ ",end='')
+        for ar in self.aretes:
+            print(ar,end=' ')
         print("]")
 
 class Salle():
@@ -144,7 +173,7 @@ class Promotion():
     def listeMatiere(self):
         del self._listeMatiere
 
-    def afficherMatiere(self):
+    def afficherPromotion(self):
         print(self.name,end=', ')# end='' sert à ne pas retrouner à la ligne avec le print
         print(self.nbPlaces,end=', ')
         print("[ ",end='')
@@ -182,14 +211,9 @@ class Session():
     def listeMatiere(self):
         del self._listeMatiere
 
-    def afficherMatiere(self):
+    def afficherSession(self):
         print(self.creneau,end=', ')# end='' sert à ne pas retrouner à la ligne avec le print
         print("[ ",end='')
         for matiere in self.listeMatiere:
             print(matiere.name,end=' ')
         print("]")
-
-
-
-######## main ############
-
