@@ -217,3 +217,26 @@ class Session():
         for matiere in self.listeMatiere:
             print(matiere.name,end=' ')
         print("]")
+
+######## main ############
+
+#ici on introduira le code de Sarah et Charlotte qui liront le csv et fourniront une liste de salles, une liste de matières et une liste de promotions. 
+#Tous les attributs des promotions seront remplis et on n'y touchera plus. 
+#Tous les attributs des salles seront remplis et seuls les disponibilités seront modifés par la partie de Bertrand. 
+#Le nom et la duree des matières seront remplis et on n'y touchera plus, la liste des salles sera rempli dans la partie de Bertrand et intialisé à une liste vide, les arêtes et le degré de saturation seront respectivement initialisés à une liste vide et 0.
+
+
+#on suppose
+matieres #liste de matières
+promotions #liste de promotions
+salles #liste de salles
+
+#dans la partie du code qui va suivre, on va parcourir les promotions pour créer les arêtes des matières. Une arête représente le fait que les deux matières ne puissent pas se dérouler sur la même session
+
+for promo in promotions :
+    matpromo=promo.listeMatiere #on récupère la liste des matières de la promo
+    for i in range(len(matpromo)): #on traite les matières une par une
+        for j in range (i+1, len(matpromo)): 
+            if matpromo[j] not in matpromo[i].aretes : #on vérifie que l'arête n'existe pas déjà
+                matpromo[i].aretes.append(matpromo[j])
+                matpromo[j].aretes.append(matpormo[i]) #ici on a les matières i et j qui sont enseignées dans une promo donc les examens ne peuvent pas se dérouler en même temps, donc on ajoute j dans les arêtes de i et i dans les arêtes de j
