@@ -4,6 +4,8 @@ class Matiere():
         self.name=name
         self.duree=duree
         self.listeSalles=listeSalles
+        self.aretes = aretes
+        self.degreSaturation = degreSaturation
 
     #getter setter et affichage
     @property
@@ -48,7 +50,7 @@ class Matiere():
 
     @aretes.setter
     def aretes(self,value):
-        self._aretes = int(value)
+        self._aretes = value
 
     @aretes.deleter
     def aretes(self):
@@ -60,7 +62,7 @@ class Matiere():
 
     @listeSalles.setter
     def listeSalles(self,value):
-        self._listeSalles = int(value)
+        self._listeSalles = value
 
     @listeSalles.deleter
     def listeSalles(self):
@@ -167,7 +169,7 @@ class Promotion():
 
     @listeMatiere.setter
     def listeMatiere(self,value):
-        self._listeMatiere = int(value)
+        self._listeMatiere = value
 
     @listeMatiere.deleter
     def listeMatiere(self):
