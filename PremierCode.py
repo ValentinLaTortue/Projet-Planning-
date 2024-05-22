@@ -1,12 +1,11 @@
-import csv 
+import csv
 
 class Matiere():
-    def __init__(self,name,duree,listeSalles, aretes, couleur, degres, degreSaturation):
+    def __init__(self,name,duree,listeSalles, aretes, couleur, degreSaturation):
         self.name=name
         self.duree=duree
         self.listeSalles=listeSalles
         self.aretes = aretes
-        self.degres = degres
         self.couleur = couleur
         self.degreSaturation = degreSaturation
 
@@ -34,18 +33,7 @@ class Matiere():
     @duree.deleter
     def duree(self):
         del self._duree
-    @property
-    def degres(self):
-        return self._degres
 
-    @degres.setter
-    def degres(self,value):
-        self._degres = int(value)
-    
-    @degres.deleter
-    def degres(self):
-        del self._degres
-    
     @property
     def degreSaturation(self):
         return self._degreSaturation
@@ -69,7 +57,7 @@ class Matiere():
     @couleur.deleter
     def couleur(self):
         del self._couleur
-    
+
     @property
     def aretes(self):
         return self._aretes
@@ -98,15 +86,14 @@ class Matiere():
         print(self.name,end=', ')# end='' sert à ne pas retrouner à la ligne avec le print
         print(self.duree,end=', ')
         print(self.degreSaturation,end=', ')
-        print(self.degres,end=', ')
         print(self.couleur,end=', ')
         print("[ ",end='')
         for salle in self.listeSalles:
             print(salle.name,end=' ')
-        print("]")
+        print("]",end=",")
         print("[ ",end='')
         for ar in self.aretes:
-            print(ar,end=' ')
+            print(ar.name,end=' ')
         print("]")
 
 class Salle():
@@ -259,7 +246,6 @@ with open('Matières.csv', mode='r', newline='') as csvfile:
             duree=int(row['duree']),
             listeSalles=[],
             aretes=[],
-            degres=0,
             degreSaturation=0,
             couleur=0
         )
@@ -287,9 +273,9 @@ for promotion in promotions:
 
 ######## main ############
 
-#ici on introduira le code de Sarah et Charlotte qui liront le csv et fourniront une liste de salles, une liste de matières et une liste de promotions. 
-#Tous les attributs des promotions seront remplis et on n'y touchera plus. 
-#Tous les attributs des salles seront remplis et seuls les disponibilités seront modifés par la partie de Bertrand. 
+#ici on introduira le code de Sarah et Charlotte qui liront le csv et fourniront une liste de salles, une liste de matières et une liste de promotions.
+#Tous les attributs des promotions seront remplis et on n'y touchera plus.
+#Tous les attributs des salles seront remplis et seuls les disponibilités seront modifés par la partie de Bertrand.
 #Le nom et la duree des matières seront remplis et on n'y touchera plus, la liste des salles sera rempli dans la partie de Bertrand et intialisé à une liste vide, les arêtes et le degré de saturation seront respectivement initialisés à une liste vide et 0.
 
 
@@ -300,29 +286,75 @@ for promotion in promotions:
 
 #dans la partie du code qui va suivre, on va parcourir les promotions pour créer les arêtes des matières. Une arête représente le fait que les deux matières ne puissent pas se dérouler sur la même session
 
+# for matiere in matieres : #construction des aretes
+#     for promotion in promotions :
+#         liste_mat=[]
+#         for matpromo in promotion.listeMatiere :
+#             liste_mat.append(matpromo)
+#         if matiere.name in liste_mat :
+#             for m in liste_mat :
+#                 if m.name != matiere.name and m not in matiere.aretes :
+#                     matiere.aretes.append(m)
+#nbMat*nbPromo*nbMatPromo
+
+# for promotion in promotions :
+#     liste_mat=promotion.listeMatiere
+#     for m in liste_mat :
+#         if m.name != matiere.name and m not in matiere.aretes :
+#             matiere.aretes.append(m)
+
+
+
+# def mat_deg_max():
+#     max=0
+#     for matiere in matieres :
+#         if max < matiere.degres and matiere.couleur==0 :
+#             max = matiere.degres
+#             mat = matiere
+#     return mat
+
 for promo in promotions :
-    matpromo=promo.listeMatiere #on récupère la liste des matières de la promo
-    for i in range(len(matpromo)): #on traite les matières une par une
-        for j in range (i+1, len(matpromo)): 
-            if matpromo[j] not in matpromo[i].aretes : #on vérifie que l'arête n'existe pas déjà
-                matpromo[i].aretes.append(matpromo[j])
-                matpromo[j].aretes.append(matpromo[i]) #ici on a les matières i et j qui sont enseignées dans une promo donc les examens ne peuvent pas se dérouler en même temps, donc on ajoute j dans les arêtes de i et i dans les arêtes de j
+   matpromo=promo.listeMatiere #on récupère la liste des matières de la promo
+   for i in range(len(matpromo)): #on traite les matières une par une
+       for j in range (i+1, len(matpromo)):
+           if matpromo[j] not in matpromo[i].aretes : #on vérifie que l'arête n'existe pas déjà
+               matpromo[i].aretes.append(matpromo[j])
+               matpromo[j].aretes.append(matpromo[i]) #ici on a les matières i et j qui sont enseignées dans une promo donc les examens ne peuvent pas se dérouler en même temps, donc on ajoute j dans les arêtes de i et i dans les arêtes de j
+#nbPromo*nbMatPromo*nbmatpromo
+
 
 def mat_deg_max():
     max=0
     deg=0
     for matiere in matieres :
-        if max <= matiere.degreSaturation and matiere.couleur==0 :
-            if max==matiere.degreSaturation and deg < len(matiere.aretes) :
-                max = matiere.degreSaturation
-                deg = len(matiere.aretes)
-                mat = matiere
+        if matiere.couleur==0 and (max < matiere.degreSaturation or (max==matiere.degreSaturation and deg < len(matiere.aretes)))  :
+            max = matiere.degreSaturation
+            deg = len(matiere.aretes)
+            mat = matiere
     return mat
 
 
-def mise_a_jour(matiere):
-    dsat = 0
-    for mat in matiere.aretes :
-        if mat.couleur != 0 :
-            dsat += 1
-    matiere.degreSaturation=dsat
+compteur=0
+while compteur<len(matieres):
+    compteur+=1
+    encours=mat_deg_max()
+    coul=1
+    ok=True
+    couleurs=[0 for k in range (len(matieres))]
+    for mat in encours.aretes :
+        if mat.couleur==1:
+            ok=False
+        if mat.couleur>0:
+            couleurs[mat.couleur - 1]=1
+    if not ok:
+        ind=0
+        while couleurs[ind]==1:
+            ind+=1
+        coul=ind+1
+    encours.couleur=coul
+    for mat in encours.aretes : 
+            mat.degreSaturation += 1
+
+print("   ")
+for matiere in matieres:
+    matiere.afficherMatiere()
