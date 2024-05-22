@@ -308,7 +308,7 @@ for matiere in matieres : #construction des aretes
         if matiere.name in liste_mat :
             for m in liste_mat :
                 if m != matiere.name and m not in matiere.aretes :
-                    matiere.aretes.append(m)
+                    matiere.aretes.append(matiere)
     matiere.degres=len(matiere.aretes)
 
 def mat_deg_max():
