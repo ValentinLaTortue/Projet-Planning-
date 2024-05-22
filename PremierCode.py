@@ -314,7 +314,7 @@ for matiere in matieres : #construction des aretes
 def mat_deg_max():
     max=0
     for matiere in matieres :
-        if max < matiere.degreSaturation and matiere.couleur==0 :
+        if max <= matiere.degreSaturation and matiere.couleur==0 :
             max = matiere.degreSaturation
             mat = matiere
     return mat
