@@ -1,3 +1,4 @@
+import csv 
 
 class Matiere():
     def __init__(self,name,duree,listeSalles, aretes, couleur, degres, degreSaturation):
