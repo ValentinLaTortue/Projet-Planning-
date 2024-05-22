@@ -180,7 +180,7 @@ class Promotion():
         print(self.nbPlaces,end=', ')
         print("[ ",end='')
         for matiere in self.listeMatiere:
-            print(matiere.name,end=' ')
+            print(matiere.name,end=', ')
         print("]")
 
 class Session():
@@ -240,7 +240,7 @@ promotions = []
 with open('Promotions.csv', mode='r', newline='') as csvfile:
     csvreader = csv.DictReader(csvfile)
     for row in csvreader:
-        liste_matieres_noms = row['liste_matieres'].split(';')
+        liste_matieres_noms = row['liste_matieres'].split(';') #Fais une liste des matières de chaque promo
         liste_matieres = [matiere for matiere in matieres if matiere.name in liste_matieres_noms]
         promotion = Promotion(
             name=row['nom'],
