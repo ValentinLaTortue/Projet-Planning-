@@ -199,9 +199,10 @@ class Promotion():
         print("]")
 
 class Session():
-    def __init__(self,creneau,listeMatiere):
+    def __init__(self,creneau, couleur, listeMatiere):
         self.creneau=creneau
         self.listeMatiere=listeMatiere
+        self.couleur=couleur
 
     #getter setter et toString
     @property
@@ -217,6 +218,18 @@ class Session():
         del self._creneau
 
     @property
+    def couleur(self):
+        return self._couleur
+
+    @couleur.setter
+    def couleur(self,value):
+        self._couleur=int(value)
+
+    @couleur.deleter
+    def couleur(self):
+        del self._couleur
+
+    @property
     def listeMatiere(self):
         return self._listeMatiere
 
@@ -230,6 +243,7 @@ class Session():
 
     def afficherSession(self):
         print(self.creneau,end=', ')# end='' sert à ne pas retrouner à la ligne avec le print
+        print(self.couleur)
         print("[ ",end='')
         for matiere in self.listeMatiere:
             print(matiere.name,end=' ')
