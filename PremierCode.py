@@ -1,10 +1,11 @@
 
 class Matiere():
-    def __init__(self,name,duree,listeSalles, aretes, degreSaturation):
+    def __init__(self,name,duree,listeSalles, aretes, couleur, degreSaturation):
         self.name=name
         self.duree=duree
         self.listeSalles=listeSalles
         self.aretes = aretes
+        self.couleur = couleur
         self.degreSaturation = degreSaturation
 
     #getter setter et affichage
@@ -45,6 +46,18 @@ class Matiere():
         del self._degreSaturation
 
     @property
+    def couleur(self):
+        return self._couleur
+
+    @couleur.setter
+    def couleur(self,value):
+        self._couleur = int(value)
+
+    @couleur.deleter
+    def couleur(self):
+        del self._couleur
+    
+    @property
     def aretes(self):
         return self._aretes
 
@@ -72,6 +85,7 @@ class Matiere():
         print(self.name,end=', ')# end='' sert à ne pas retrouner à la ligne avec le print
         print(self.duree,end=', ')
         print(self.degreSaturation,end=', ')
+        print(self.couleur,end=', ')
         print("[ ",end='')
         for salle in self.listeSalles:
             print(salle.name,end=' ')
@@ -232,6 +246,7 @@ with open('Matières.csv', mode='r', newline='') as csvfile:
             listeSalles=[],
             aretes=[],
             degreSaturation=0
+            couleur=0
         )
         matieres.append(matiere)
 
