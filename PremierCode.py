@@ -199,7 +199,7 @@ class Promotion():
         print("]")
 
 class Session():
-    def __init__(self,creneau, couleur, listeMatiere):
+    def __init__(self,creneau,couleur,listeMatiere):
         self.creneau=creneau
         self.listeMatiere=listeMatiere
         self.couleur=couleur
@@ -235,7 +235,7 @@ class Session():
 
     @listeMatiere.setter
     def listeMatiere(self,value):
-        self._listeMatiere = int(value)
+        self._listeMatiere = value
 
     @listeMatiere.deleter
     def listeMatiere(self):
@@ -347,6 +347,7 @@ def mat_deg_max():
             mat = matiere
     return mat
 
+sessions=[]
 
 compteur=0
 while compteur<len(matieres):
@@ -366,9 +367,17 @@ while compteur<len(matieres):
             ind+=1
         coul=ind+1
     encours.couleur=coul
-    for mat in encours.aretes : 
+    trouve=False
+    for ses in sessions :
+        if ses.couleur==coul:
+            ses.listeMatiere.append(encours)
+            trouve=True
+    if not trouve:
+        ses=Session(creneau=[],couleur=coul, listeMatiere=[encours])
+        sessions.append(ses)
+    for mat in encours.aretes :
             mat.degreSaturation += 1
 
 print("   ")
-for matiere in matieres:
-    matiere.afficherMatiere()
+for ses in sessions:
+    ses.afficherSession()
