@@ -1,10 +1,11 @@
 
 class Matiere():
-    def __init__(self,name,duree,listeSalles, aretes, couleur, degreSaturation):
+    def __init__(self,name,duree,listeSalles, aretes, couleur, degres, degreSaturation):
         self.name=name
         self.duree=duree
         self.listeSalles=listeSalles
         self.aretes = aretes
+        self.degres = degres
         self.couleur = couleur
         self.degreSaturation = degreSaturation
 
@@ -32,7 +33,18 @@ class Matiere():
     @duree.deleter
     def duree(self):
         del self._duree
+    @property
+    def degres(self):
+        return self._degres
 
+    @degres.setter
+    def degres(self,value):
+        self._degres = int(value)
+    
+    @degres.deleter
+    def degres(self):
+        del self._degres
+    
     @property
     def degreSaturation(self):
         return self._degreSaturation
@@ -85,6 +97,7 @@ class Matiere():
         print(self.name,end=', ')# end='' sert à ne pas retrouner à la ligne avec le print
         print(self.duree,end=', ')
         print(self.degreSaturation,end=', ')
+        print(self.degres,end=', ')
         print(self.couleur,end=', ')
         print("[ ",end='')
         for salle in self.listeSalles:
@@ -245,6 +258,7 @@ with open('Matières.csv', mode='r', newline='') as csvfile:
             duree=int(row['duree']),
             listeSalles=[],
             aretes=[],
+            degres=0,
             degreSaturation=0,
             couleur=0
         )
@@ -294,6 +308,7 @@ for matiere in matieres : #construction des aretes
             for m in liste_mat :
                 if m != matiere.name and m not in matiere.aretes :
                     matiere.aretes.append(m)
+    matiere.degres=len(matiere.aretes)
 
 
 #for promo in promotions :
