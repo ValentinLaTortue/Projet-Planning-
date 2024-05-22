@@ -320,9 +320,9 @@ def mat_deg_max():
     return mat
 
 
-def mise_a_jour():
+def mise_a_jour(matiere):
     dsat = 0
-    for mat in matiere.aretes : 
+    for mat in matiere.aretes :
         if mat.couleur != 0 :
             dsat += 1
     matiere.degreSaturation=dsat
