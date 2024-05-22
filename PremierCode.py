@@ -300,30 +300,21 @@ for promotion in promotions:
 
 #dans la partie du code qui va suivre, on va parcourir les promotions pour créer les arêtes des matières. Une arête représente le fait que les deux matières ne puissent pas se dérouler sur la même session
 
-for matiere in matieres : #construction des aretes
-    for promotion in promotions :
-        liste_mat=[]
-        for matpromo in promotion.listeMatiere :
-            liste_mat.append(matpromo.name)
-        if matiere.name in liste_mat :
-            for m in liste_mat :
-                if m != matiere.name and m not in matiere.aretes :
-                    matiere.aretes.append(matiere)
-    matiere.degres=len(matiere.aretes)
+for promo in promotions :
+    matpromo=promo.listeMatiere #on récupère la liste des matières de la promo
+    for i in range(len(matpromo)): #on traite les matières une par une
+        for j in range (i+1, len(matpromo)): 
+            if matpromo[j] not in matpromo[i].aretes : #on vérifie que l'arête n'existe pas déjà
+                matpromo[i].aretes.append(matpromo[j])
+                matpromo[j].aretes.append(matpromo[i]) #ici on a les matières i et j qui sont enseignées dans une promo donc les examens ne peuvent pas se dérouler en même temps, donc on ajoute j dans les arêtes de i et i dans les arêtes de j
 
 def mat_deg_max():
     max=0
+    deg=0
     for matiere in matieres :
         if max <= matiere.degreSaturation and matiere.couleur==0 :
-            max = matiere.degreSaturation
-            mat = matiere
+            if max==matiere.degreSaturation and deg < len(matiere.aretes) :
+                max = matiere.degreSaturation
+                deg = len(matiere.aretes)
+                mat = matiere
     return mat
-
-#for promo in promotions :
-#    matpromo=promo.listeMatiere #on récupère la liste des matières de la promo
-#    for i in range(len(matpromo)): #on traite les matières une par une
-#        for j in range (i+1, len(matpromo)): 
-#            if matpromo[j] not in matpromo[i].aretes : #on vérifie que l'arête n'existe pas déjà
-#                matpromo[i].aretes.append(matpromo[j])
-#                matpromo[j].aretes.append(matpormo[i]) #ici on a les matières i et j qui sont enseignées dans une promo donc les examens ne peuvent pas se dérouler en même temps, donc on ajoute j dans les arêtes de i et i dans les arêtes de j
-
