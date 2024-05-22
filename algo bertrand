@@ -1,0 +1,99 @@
+class Matiere:
+    def __init__(self, nom, nbeleves, dureeEpreuve, listePromo, listeSalle):
+        self.nom = nom
+        self.nbeleves = nbeleves
+        self.dureeEpreuve = dureeEpreuve
+        self.listePromo = listePromo
+        self.listeSalle = listeSalle
+
+class Salle:
+    def __init__(self, nom, nbPlaces, listeDisponibilites):
+        self.nom = nom
+        self.nbPlaces = nbPlaces
+        self.listeDisponibilites = listeDisponibilites
+
+def emploiDuTemps(dicocolormatiere):
+    jours = ["lundi", "mardi", "mercredi", "jeudi", "vendredi"]
+    periodes = range(1, 4)
+
+    emploi = {}
+
+    for jour in jours:
+        for periode in periodes:
+            emploi[f"{jour}{periode}"] = []
+
+    for i, key in enumerate(emploi.keys(), start=1):
+        if i in dicocolormatiere:
+            matieres = [matiere.nom for matiere in dicocolormatiere[i]]
+            emploi[key] = matieres
+
+    return emploi
+
+def assigner_salles_examens(ListeSalle, emploi_du_temps, ListeMatieres):
+    for salle_examen in ListeSalle:
+        disponibilites_a_supprimer = []
+        for dispo_salle in salle_examen.listeDisponibilites:
+            salle_assignee = False
+            for jour_periode, matieres_emploi in emploi_du_temps.items():
+                if dispo_salle == jour_periode:
+                    for nom_matiere in matieres_emploi:
+                        matiere = next((m for m in ListeMatieres if m.nom == nom_matiere), None)
+                        if matiere:
+                            matiere.listeSalle.append(salle_examen)
+                            salle_assignee = True
+                    if salle_assignee:
+                        disponibilites_a_supprimer.append(dispo_salle)
+                        break
+        for dispo in disponibilites_a_supprimer:
+            salle_examen.listeDisponibilites.remove(dispo)
+            
+def emploiDuTempsFinal(emploi_initial, ListeMatieres):
+    emploi_final = {}
+
+    for jour_periode, noms_matieres in emploi_initial.items():
+        matieres = [next((m for m in ListeMatieres if m.nom == nom), None) for nom in noms_matieres]
+        emploi_final[jour_periode] = matieres
+
+    return emploi_final
+
+#-------------------------------------------- test ----------------------------------------------------------------------
+
+Salle1 = Salle("cauchy", 200, ["lundi2", "mardi2", "jeudi3"])
+Salle2 = Salle("condorcet", 150, ["lundi1", "jeudi1"])
+Salle3 = Salle("turing", 100, ["lundi3", "jeudi4", "vendredi1"])
+
+Matiere1 = Matiere("Statinf", 50, 120, ["GMF", "GMI"], [])
+Matiere2 = Matiere("Proba", 50, 120, ["GMF"], [])
+Matiere3 = Matiere("Topo", 50, 120, ["GMF"], [])
+Matiere4 = Matiere("opti", 70, 90, ["GMF"], [])
+
+ListeSalleExam = [Salle1, Salle2, Salle3]
+ListeMatieres = [Matiere1, Matiere2, Matiere3, Matiere4]
+
+dicoValAimie = {1: [Matiere1], 2: [Matiere2, Matiere3], 3: [Matiere4]}
+emploiTemps = emploiDuTemps(dicoValAimie)
+print("Emploi du Temps:", emploiTemps ,"\n")
+
+
+assigner_salles_examens(ListeSalleExam, emploiTemps, ListeMatieres)
+
+# Affichage des salles attribuées à chaque matière après l'assignation
+print ("Après assignation des salles")
+
+# On regarde quelles salles sont assignées aux différentes matières
+print("salles attribuées aux différentes matières")
+for matiere in ListeMatieres:
+    print(f"Matière {matiere.nom} : Salles attribuées -> {[salle.nom for salle in matiere.listeSalle]}")
+print("\n")
+
+# Affichage des disponibilités restantes pour chaque salle après l'assignation
+print("disponibilités restantes des différentes salles:")
+for salle in ListeSalleExam:
+    print(f"Salle {salle.nom} : Disponibilités restantes -> {salle.listeDisponibilites}")
+
+# Création de l'emploi du temps final avec les matières mises à jour
+emploiTempsFinal = emploiDuTempsFinal(emploiTemps, ListeMatieres)
+
+# Affichage de l'emploi du temps final
+for jour_periode, matieres in emploiTempsFinal.items():
+    print(f"{jour_periode}: {[matiere.nom + ' - Salles: ' + ', '.join([s.nom for s in matiere.listeSalle]) for matiere in matieres]}")
