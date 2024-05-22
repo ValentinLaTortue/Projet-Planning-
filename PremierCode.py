@@ -315,8 +315,8 @@ def mat_deg_max():
     for matiere in matieres :
         if max < matiere.degres and matiere.couleur==0 :
             max = matiere.degres
-            mat = matiere.name
-    print(mat)
+            mat = matiere
+    return mat
 
 #for promo in promotions :
 #    matpromo=promo.listeMatiere #on récupère la liste des matières de la promo
