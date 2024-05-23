@@ -1,0 +1,15 @@
+nom,capacite,dispo
+salle1,50,lundi1;lundi2;mardi3;jeudi3
+salle2,50,mardi1;mardi2;mardi3;jeudi1;jeudi2;vendredi3
+salle3,40,lundi3;mardi1;mercredi1;mercredi3;jeudi3;vendredi2
+salle4,50,mardi1;mardi2;vendredi1
+salle5,40,jeudi1;jeudi2;jeudi3
+salle6,40,mercredi1;mercredi2;jeudi1;vendredi1
+salle7,60,mardi1;mardi2;jeudi1
+salle8,60,lundi1;lundi2;mardi1;mercredi2
+salle9,60,lundi2;mardi2;mercredi1
+salle10,50,mardi3;mercredi3;jeudi3;vendredi3
+salle11,40,jeudi3;vendredi2
+salle12,70,vendredi1;vendredi2;vendredi3
+salle13,50,lundi3;mardi3;mercredi3;jeudi3;vendredi3
+salle14,40,mercredi2;jeudi2;vendredi1
