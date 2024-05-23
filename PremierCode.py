@@ -97,18 +97,18 @@ class Matiere():
         print("]")
 
 class Salle():
-    def __init__(self,name,capacite,listeDisponibilite):
-        self.name=name
-        self.capacite=capacite
-        self.listeDisponibilite=listeDisponibilite
+    def __init__(self, name, capacite, listeDisponibilite):
+        self.name = name
+        self.capacite = capacite
+        self.listeDisponibilite = listeDisponibilite
 
-    #getter setter et toString
+    # Getter, setter et toString
     @property
     def name(self):
         return self._name
 
     @name.setter
-    def name(self,value):
+    def name(self, value):
         self._name = value
 
     @name.deleter
@@ -120,7 +120,7 @@ class Salle():
         return self._capacite
 
     @capacite.setter
-    def capacite(self,value):
+    def capacite(self, value):
         self._capacite = int(value)
 
     @capacite.deleter
@@ -132,19 +132,20 @@ class Salle():
         return self._listeDisponibilite
 
     @listeDisponibilite.setter
-    def listeDisponibilite(self,value):
-        self._listeDisponibilite = int(value)
+    def listeDisponibilite(self, value):
+        self._listeDisponibilite = value
 
     @listeDisponibilite.deleter
     def listeDisponibilite(self):
         del self._listeDisponibilite
 
     def afficherSalle(self):
-        print(self.name,end=', ')# end='' sert à ne pas retrouner à la ligne avec le print
-        print(self.capacite,end=', ')
+        print(self.name, end=', ')  # end='' sert à ne pas retourner à la ligne avec le print
+        print(self.capacite, end=', ')
         for dispo in self.listeDisponibilite:
-            print(dispo,end=' ')
+            print(dispo, end=' ')
         print("]")
+
 
 
 class Promotion():
@@ -248,8 +249,13 @@ class Session():
         for matiere in self.listeMatiere:
             print(matiere.name,end=' ')
         print("]")
-
-
+#------------------------------------------#
+    def returnSession(self):
+        liste = []
+        for matiere in self.listeMatiere:
+            liste.append(matiere)
+        return (self.couleur, liste)
+#------------------------------------------#
 matieres = []
 
 with open('Matières.csv', mode='r', newline='') as csvfile:
@@ -284,6 +290,19 @@ for matiere in matieres:
 
 for promotion in promotions:
     promotion.afficherPromotion()
+    
+salles = []
+
+with open('Salles.csv', mode='r', newline='') as csvfile:
+    csvreader = csv.DictReader(csvfile)
+    for row in csvreader:
+        liste_salles_noms = row['dispo'].split(';')
+        salle = Salle (
+            name=row['nom'],
+            capacite=int(row['capacite']),
+            listeDisponibilite=liste_salles_noms,
+        )
+        salles.append(salle)
 
 ######## main ############
 
@@ -381,3 +400,68 @@ while compteur<len(matieres):
 print("   ")
 for ses in sessions:
     ses.afficherSession()
+
+print("\n\n\n")
+dic = {}
+for ses in sessions:
+    (a,b) = ses.returnSession()
+    dic[a] = b
+
+def emploiDuTemps(dicocolormatiere):
+    jours = ["lundi", "mardi", "mercredi", "jeudi", "vendredi"]
+    periodes = range(1, 3)
+
+    emploi = {}
+
+    for jour in jours:
+        for periode in periodes:
+            emploi[f"{jour}{periode}"] = []
+
+    for i, key in enumerate(emploi.keys(), start=1):
+        if i in dicocolormatiere:
+            matieres = [matiere.name for matiere in dicocolormatiere[i]]
+            emploi[key] = matieres
+
+    return emploi
+
+emploidutemps = emploiDuTemps(dic)
+print(emploidutemps)
+print("\n\n\n")
+
+
+def assigner_salles_examens(ListeSalle, emploi_du_temps, ListeMatieres):
+    for salle_examen in ListeSalle:
+        disponibilites_a_supprimer = []
+        for dispo_salle in salle_examen.listeDisponibilite:
+            salle_assignee = False
+            for jour_periode, matieres_emploi in emploi_du_temps.items():
+                if dispo_salle == jour_periode:
+                    for nom_matiere in matieres_emploi:
+                        matiere = next((m for m in ListeMatieres if m.name == nom_matiere), None)
+                        if matiere:
+                            matiere.listeSalles.append(salle_examen)
+                            salle_assignee = True
+                    if salle_assignee:
+                        disponibilites_a_supprimer.append(dispo_salle)
+                        break
+        for dispo in disponibilites_a_supprimer:
+            salle_examen.listeDisponibilite.remove(dispo)
+
+
+assigner_salles_examens(salles,emploidutemps,matieres)
+
+
+def emploiDuTempsFinal(emploi_initial, ListeMatieres):
+    emploi_final = {}
+
+    for jour_periode, noms_matieres in emploi_initial.items():
+        matieres = [next((m for m in ListeMatieres if m.name == nom), None) for nom in noms_matieres]
+        emploi_final[jour_periode] = matieres
+
+    return emploi_final
+
+emploiTempsFinal = emploiDuTempsFinal(emploidutemps, matieres)
+# Affichage de l'emploi du temps final
+for jour_periode, matieres in emploiTempsFinal.items():
+    print(f"{jour_periode}: {[matiere.name + ' - Salles: ' + ', '.join([s.name for s in matiere.listeSalles]) for matiere in matieres]}")
+    
