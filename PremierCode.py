@@ -1,4 +1,5 @@
 import csv
+import ast
 
 class Matiere():
     def __init__(self,name,duree,listeSalles, aretes, couleur, degreSaturation):
@@ -243,7 +244,7 @@ class Session():
         del self._listeMatiere
 
     def afficherSession(self):
-        print(self.creneau,end=', ')# end='' sert à ne pas retrouner à la ligne avec le print
+        print(self.creneau,end=', ')# end='' sert à ne pas retourner à la ligne avec le print
         print(self.couleur)
         print("[ ",end='')
         for matiere in self.listeMatiere:
@@ -285,25 +286,28 @@ with open('Promotions.csv', mode='r', newline='') as csvfile:
         )
         promotions.append(promotion)
 
-for matiere in matieres:
-    matiere.afficherMatiere()
+#for matiere in matieres:
+#    matiere.afficherMatiere()
 
-for promotion in promotions:
-    promotion.afficherPromotion()
+#for promotion in promotions:
+#    promotion.afficherPromotion()
     
 salles = []
-
 with open('Salles.csv', mode='r', newline='') as csvfile:
-    csvreader = csv.DictReader(csvfile)
-    for row in csvreader:
-        liste_salles_noms = row['dispo'].split(';')
-        salle = Salle (
-            name=row['nom'],
-            capacite=int(row['capacite']),
-            listeDisponibilite=liste_salles_noms,
-        )
+    reader = csv.DictReader(csvfile)
+    for row in reader:
+        nom = row['nom']
+        capacite = int(row['capacite'])
+        # Convertir la chaîne de caractères représentant le tableau en une liste Python
+        dispo = ast.literal_eval(row['dispo'])
+        salle = Salle(nom, capacite, dispo)
         salles.append(salle)
 
+#for salle in salles:
+ #   print("Nom:", salle.name)
+  #  print("Capacité:", salle.capacite)
+   # print("Disponibilité:", salle.listeDisponibilite)
+    #print()
 ######## main ############
 
 #ici on introduira le code de Sarah et Charlotte qui liront le csv et fourniront une liste de salles, une liste de matières et une liste de promotions.
@@ -318,6 +322,33 @@ with open('Salles.csv', mode='r', newline='') as csvfile:
 #salles #liste de salles
 
 #dans la partie du code qui va suivre, on va parcourir les promotions pour créer les arêtes des matières. Une arête représente le fait que les deux matières ne puissent pas se dérouler sur la même session
+
+# for matiere in matieres : #construction des aretes
+#     for promotion in promotions :
+#         liste_mat=[]
+#         for matpromo in promotion.listeMatiere :
+#             liste_mat.append(matpromo)
+#         if matiere.name in liste_mat :
+#             for m in liste_mat :
+#                 if m.name != matiere.name and m not in matiere.aretes :
+#                     matiere.aretes.append(m)
+#nbMat*nbPromo*nbMatPromo
+
+# for promotion in promotions :
+#     liste_mat=promotion.listeMatiere
+#     for m in liste_mat :
+#         if m.name != matiere.name and m not in matiere.aretes :
+#             matiere.aretes.append(m)
+
+
+
+# def mat_deg_max():
+#     max=0
+#     for matiere in matieres :
+#         if max < matiere.degres and matiere.couleur==0 :
+#             max = matiere.degres
+#             mat = matiere
+#     return mat
 
 for promo in promotions :
    matpromo=promo.listeMatiere #on récupère la liste des matières de la promo
@@ -371,8 +402,8 @@ while compteur<len(matieres):
             mat.degreSaturation += 1
 
 print("   ")
-for ses in sessions:
-    ses.afficherSession()
+#for ses in sessions:
+#    ses.afficherSession()
 
 print("\n\n\n")
 dic = {}
@@ -381,60 +412,127 @@ for ses in sessions:
     dic[a] = b
 
 def emploiDuTemps(dicocolormatiere):
-    jours = ["lundi", "mardi", "mercredi", "jeudi", "vendredi"]
-    periodes = range(1, 3)
+    jours = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"]
 
+    # Trouver la dernière clé du dictionnaire
+    last_key = max(dicocolormatiere.keys())
+    
+    # Calculer le reste de la division par 5
+    reste = last_key % 5
+    
+    # Arrondir à l'entier supérieur si le reste n'est pas 0
+    if reste != 0:
+        reste_arrondi = (last_key // 5) + 1
+    else:
+        reste_arrondi = last_key // 5
+
+    # Si le reste est supérieur ou égal à 4, ajouter samedi
+    if reste >= 4:
+        jours.append("samedi")
+
+    # Créer un nouveau dictionnaire pour l'emploi du temps
     emploi = {}
 
     for jour in jours:
-        for periode in periodes:
-            emploi[f"{jour}{periode}"] = []
+        emploi[f"{jour}"] = []
 
-    for i, key in enumerate(emploi.keys(), start=1):
-        if i in dicocolormatiere:
-            matieres = [matiere.name for matiere in dicocolormatiere[i]]
-            emploi[key] = matieres
+    # Remplir le dictionnaire avec les "reste" sous-tableaux pour chaque jour
+    index = 1
+    for jour in jours:
+        for _ in range(reste_arrondi): # o utilise _ car on n'a pas besoin de l'index d'itération
+            if index in dicocolormatiere:
+                emploi[jour].append(dicocolormatiere[index])
+                index += 1
+            else:
+                break
 
     return emploi
 
+
 emploidutemps = emploiDuTemps(dic)
-print(emploidutemps)
-print("\n\n\n")
+
+def afficher_emploi_du_temps(emploidutemps):
+    for jour, sessions_jour in emploidutemps.items():
+        print(f"{jour.capitalize()} : ", end="")
+        for session in sessions_jour:
+            print("[", end="")
+            for idx, matiere in enumerate(session):
+                if idx != 0:
+                    print(", ", end="")
+                print(f"{matiere.name}", end="")
+            print("]", end=" ")
+    print()
+
+# Appel de la fonction pour afficher l'emploi du temps
+afficher_emploi_du_temps(emploidutemps)
 
 
-def assigner_salles_examens(ListeSalle, emploi_du_temps, ListeMatieres):
-    for salle_examen in ListeSalle:
-        disponibilites_a_supprimer = []
-        for dispo_salle in salle_examen.listeDisponibilite:
-            salle_assignee = False
-            for jour_periode, matieres_emploi in emploi_du_temps.items():
-                if dispo_salle == jour_periode:
-                    for nom_matiere in matieres_emploi:
-                        matiere = next((m for m in ListeMatieres if m.name == nom_matiere), None)
-                        if matiere:
-                            matiere.listeSalles.append(salle_examen)
-                            salle_assignee = True
-                    if salle_assignee:
-                        disponibilites_a_supprimer.append(dispo_salle)
-                        break
-        for dispo in disponibilites_a_supprimer:
-            salle_examen.listeDisponibilite.remove(dispo)
-
-
-assigner_salles_examens(salles,emploidutemps,matieres)
-
-
-def emploiDuTempsFinal(emploi_initial, ListeMatieres):
-    emploi_final = {}
-
-    for jour_periode, noms_matieres in emploi_initial.items():
-        matieres = [next((m for m in ListeMatieres if m.name == nom), None) for nom in noms_matieres]
-        emploi_final[jour_periode] = matieres
-
-    return emploi_final
-
-emploiTempsFinal = emploiDuTempsFinal(emploidutemps, matieres)
-# Affichage de l'emploi du temps final
-for jour_periode, matieres in emploiTempsFinal.items():
-    print(f"{jour_periode}: {[matiere.name + ' - Salles: ' + ', '.join([s.name for s in matiere.listeSalles]) for matiere in matieres]}")
+def assignation_salle(emploidutemps, promotions, salles):
+    resultat = {}
+    jours = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi']
     
+    for jour, sessions_jour in emploidutemps.items():
+        resultat[jour] = {}
+        
+        for session in sessions_jour:
+            salles_utilisees = []
+            heuredepart = 510  # Réinitialiser l'heure de départ à 8h30 chaque jour
+            horaires = []
+            
+            for matiere in session:
+                duree_matiere = matiere.duree
+                salle_disponible = None
+                dic3 = {}
+                
+                for salle in salles:
+                    if salle in salles_utilisees:
+                        continue
+
+                    liste_dispo = salle.listeDisponibilite[jours.index(jour)]
+                    debut_session = -1
+
+                    for i in range(len(liste_dispo)):
+                        if liste_dispo[i] == 0:
+                            if debut_session == -1:
+                                debut_session = i
+                        else:
+                            debut_session = -1
+
+                        if debut_session != -1 and (i - debut_session + 1) == duree_matiere:
+                            nb_eleves = 0
+                            for promotion in promotions:
+                                for matiere_promo in promotion.listeMatiere:
+                                    if matiere_promo.name == matiere.name:
+                                        nb_eleves = promotion.nbPlaces
+                                        dic3[matiere.name] = nb_eleves
+
+                            capacite_totale = sum(dic3.values())
+                            if capacite_totale <= salle.capacite:
+                                for k in range(debut_session, debut_session + duree_matiere):
+                                    liste_dispo[k] = 1
+                                salle_disponible = salle
+                                salles_utilisees.append(salle)
+                                heuredepart = 510 + debut_session * 30  # Calculer l'heure de début en fonction de la première disponibilité
+                                break
+
+                    if salle_disponible:
+                        break
+
+                if salle_disponible and heuredepart is not None:
+                    heurefin = heuredepart + duree_matiere * 30
+                    slot_key = f"{heuredepart / 60}h jusqu'à {heurefin / 60}h"
+                    if slot_key not in resultat[jour]:
+                        resultat[jour][slot_key] = []
+
+                    resultat[jour][slot_key].append(
+                        f"{matiere.name} : {dic3.get(matiere.name, 0)} : {salle_disponible.name}"
+                    )
+
+    return resultat
+
+# Exemple d'utilisation
+resultat = assignation_salle(emploidutemps, promotions, salles)
+for jour, sessions in resultat.items():
+    print(f"{jour} :")
+    for horaire, matieres in sessions.items():
+        print(f"  {horaire} : {matieres}")
