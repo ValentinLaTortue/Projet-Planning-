@@ -530,6 +530,10 @@ def assignation_salle(emploidutemps, promotions, salles):
 
                     for k in range(len(liste_salles)):
                         resultat[jour][slot_key].append(f"{promo} - {matiere.name} - {liste_salles[k].name} : {liste_nb_eleve[k]}")
+    for jour in jours :
+        if resultat[jour]=={} :
+            del resultat[jour]
+            
     return resultat
 
 
