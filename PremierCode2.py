@@ -150,9 +150,9 @@ class Salle():
 
 
 class Promotion():
-    def __init__(self,name,nbPlaces,listeMatiere):
+    def __init__(self,name,nbEleves,listeMatiere):
         self.name=name
-        self.nbPlaces=nbPlaces
+        self.nbEleves=nbEleves
         self.listeMatiere=listeMatiere
 
     #getter setter et toString
@@ -169,16 +169,16 @@ class Promotion():
         del self._name
 
     @property
-    def nbPlaces(self):
-        return self._nbPlaces
+    def nbEleves(self):
+        return self._nbEleves
 
     @nbPlaces.setter
-    def nbPlaces(self,value):
-        self._nbPlaces = int(value)
+    def nbEleves(self,value):
+        self._nbEleves = int(value)
 
     @nbPlaces.deleter
-    def nbPlaces(self):
-        del self._nbPlaces
+    def nbEleves(self):
+        del self._nbEleves
 
     @property
     def listeMatiere(self):
