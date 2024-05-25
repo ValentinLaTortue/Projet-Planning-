@@ -150,9 +150,9 @@ class Salle():
 
 
 class Promotion():
-    def __init__(self,name,nbPlaces,listeMatiere):
+    def __init__(self,name,nb_eleves,listeMatiere):
         self.name=name
-        self.nbPlaces=nbPlaces
+        self.nb_eleves=nb_eleves
         self.listeMatiere=listeMatiere
 
     #getter setter et toString
@@ -169,16 +169,16 @@ class Promotion():
         del self._name
 
     @property
-    def nbPlaces(self):
-        return self._nbPlaces
+    def nb_eleves(self):
+        return self._nb_eleves
 
-    @nbPlaces.setter
-    def nbPlaces(self,value):
-        self._nbPlaces = int(value)
+    @nb_eleves.setter
+    def nb_eleves(self,value):
+        self._nb_eleves = int(value)
 
-    @nbPlaces.deleter
-    def nbPlaces(self):
-        del self._nbPlaces
+    @nb_eleves.deleter
+    def nb_eleves(self):
+        del self._nb_eleves
 
     @property
     def listeMatiere(self):
@@ -194,30 +194,16 @@ class Promotion():
 
     def afficherPromotion(self):
         print(self.name,end=', ')# end='' sert à ne pas retrouner à la ligne avec le print
-        print(self.nbPlaces,end=', ')
+        print(self.nb_eleves,end=', ')
         print("[ ",end='')
         for matiere in self.listeMatiere:
             print(matiere.name,end=', ')
         print("]")
 
 class Session():
-    def __init__(self,creneau,couleur,listeMatiere):
-        self.creneau=creneau
+    def __init__(self,couleur,listeMatiere):
         self.listeMatiere=listeMatiere
         self.couleur=couleur
-
-    #getter setter et toString
-    @property
-    def creneau(self):
-        return self._creneau
-
-    @creneau.setter
-    def creneau(self,value):
-        self._creneau = value
-
-    @creneau.deleter
-    def creneau(self):
-        del self._creneau
 
     @property
     def couleur(self):
@@ -244,8 +230,7 @@ class Session():
         del self._listeMatiere
 
     def afficherSession(self):
-        print(self.creneau,end=', ')# end='' sert à ne pas retourner à la ligne avec le print
-        print(self.couleur)
+        print(self.couleur) # end='' sert à ne pas retourner à la ligne avec le print
         print("[ ",end='')
         for matiere in self.listeMatiere:
             print(matiere.name,end=' ')
@@ -281,7 +266,7 @@ with open('Promotions.csv', mode='r', newline='') as csvfile:
         liste_matieres = [matiere for matiere in matieres if matiere.name in liste_matieres_noms]
         promotion = Promotion(
             name=row['nom'],
-            nbPlaces=int(row['nb_eleves']),
+            nb_eleves=int(row['nb_eleves']),
             listeMatiere=liste_matieres
         )
         promotions.append(promotion)
@@ -370,7 +355,7 @@ while compteur<len(matieres):
             ses.listeMatiere.append(encours)
             trouve=True
     if not trouve:
-        ses=Session(creneau=[],couleur=coul, listeMatiere=[encours])
+        ses=Session(couleur=coul, listeMatiere=[encours])
         sessions.append(ses)
     for mat in encours.aretes :
             mat.degreSaturation += 1
@@ -462,7 +447,7 @@ def assignation_salle(emploidutemps, promotions, salles):
                 for promotion in promotions:
                     for matiere_promo in promotion.listeMatiere:
                         if matiere_promo.name == matiere.name:
-                            capacite_totale += promotion.nbPlaces
+                            capacite_totale += promotion.nb_eleves
 
                 nb_eleve_restants = capacite_totale
                 liste_nb_eleve = []
@@ -479,36 +464,46 @@ def assignation_salle(emploidutemps, promotions, salles):
 
                     test=(heuredepart-510)//30
 
-                    for i in range(test,len(liste_dispo)):
-                        if liste_dispo[i] == 0:
-                            if debut_session == -1:
-                                debut_session = i
-                        else:
-                            debut_session = -1
+                    try :
+                        for i in range(test,len(liste_dispo)):
+                            if liste_dispo[i] == 0:
+                                if debut_session == -1:
+                                    debut_session = i
+                            else:
+                                debut_session = -1
 
-                        if debut_session != -1 and (i - debut_session + 1) == duree_matiere :
-                            if nb_eleve_restants <= salle.capacite:
-                                for k in range(debut_session, debut_session + duree_matiere + 2) :
-                                    liste_dispo[k] = 1
-                                liste_salles.append(salle)
-                                salles_utilisees.append(salle)
-                                liste_nb_eleve.append(nb_eleve_restants)
-                                heuredepart = 510 + debut_session * 30  # Calculer l'heure de début en fonction de la première disponibilité
-                                nb_eleve_restants = 0
-                                break
+                            if debut_session != -1 and (i - debut_session + 1) == duree_matiere :
+                                if nb_eleve_restants <= salle.capacite:
+                                    for k in range(debut_session, debut_session + duree_matiere + 2) :
+                                        liste_dispo[k] = 1
+                                    liste_salles.append(salle)
+                                    salles_utilisees.append(salle)
+                                    liste_nb_eleve.append(nb_eleve_restants)
+                                    heuredepart = 510 + debut_session * 30  # Calculer l'heure de début en fonction de la première disponibilité
+                                    nb_eleve_restants = 0
+                                    break
 
-                            if nb_eleve_restants > salle.capacite:
-                                for k in range(debut_session, debut_session + duree_matiere + 2):
-                                    liste_dispo[k] = 1
-                                liste_salles.append(salle)
-                                salles_utilisees.append(salle)
-                                liste_nb_eleve.append(salle.capacite)
-                                nb_eleve_restants -= salle.capacite
-                                heuredepart = 510 + debut_session * 30
-                                break
+                                if nb_eleve_restants > salle.capacite:
+                                    for k in range(debut_session, debut_session + duree_matiere + 2):
+                                        liste_dispo[k] = 1
+                                    liste_salles.append(salle)
+                                    salles_utilisees.append(salle)
+                                    liste_nb_eleve.append(salle.capacite)
+                                    nb_eleve_restants -= salle.capacite
+                                    heuredepart = 510 + debut_session * 30
+                                    break
+
+                    except IndexError as e :
+                        print(f"IndexError: Il n'y a pas assez de créneau pour la {salle.name} le {jour}.")
+                        print(f"Details: {str(e)}\n")
+
+                        continue
 
                     if nb_eleve_restants == 0:
                         break
+
+                if nb_eleve_restants > 0:
+                    print(f"Il n'y a pas assez de salles pour {matiere.name} le {jour}\n")
 
                 if liste_salles and heuredepart is not None:
                     heurefin = (heuredepart + duree_matiere * 30) / 60
@@ -539,7 +534,7 @@ def assignation_salle(emploidutemps, promotions, salles):
                             if matiere_promo.name == matiere.name:
                                 promo.append(promotion.name)
                     """
-                    
+
                     for k in range(len(liste_salles)):
                         resultat[jour][slot_key].append(f"{matiere.name} - {liste_salles[k].name} : {liste_nb_eleve[k]}")
 
