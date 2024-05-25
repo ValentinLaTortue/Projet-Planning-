@@ -1,6 +1,7 @@
 import csv
 import ast
 
+# Classe représentant une matière
 class Matiere():
     def __init__(self,name,duree,listeSalles, aretes, couleur, degreSaturation):
         self.name=name
@@ -10,7 +11,7 @@ class Matiere():
         self.couleur = couleur
         self.degreSaturation = degreSaturation
 
-    #getter setter et affichage
+    #getter setter et affichage pour chaque attribut
     @property
     def name(self):
         return self._name
@@ -83,6 +84,7 @@ class Matiere():
     def listeSalles(self):
         del self._listeSalles
 
+    # Méthode pour afficher les informations d'une matière
     def afficherMatiere(self):
         print(self.name,end=', ')# end='' sert à ne pas retrouner à la ligne avec le print
         print(self.duree,end=', ')
@@ -97,13 +99,14 @@ class Matiere():
             print(ar.name,end=' ')
         print("]")
 
+# Classe représentant une salle
 class Salle():
     def __init__(self, name, capacite, listeDisponibilite):
         self.name = name
         self.capacite = capacite
         self.listeDisponibilite = listeDisponibilite
 
-    # Getter, setter et toString
+    # Getter, setter et toString pour chaque attribut
     @property
     def name(self):
         return self._name
@@ -140,6 +143,7 @@ class Salle():
     def listeDisponibilite(self):
         del self._listeDisponibilite
 
+    # Méthode pour afficher les informations d'une salle
     def afficherSalle(self):
         print(self.name, end=', ')  # end='' sert à ne pas retourner à la ligne avec le print
         print(self.capacite, end=', ')
@@ -147,15 +151,14 @@ class Salle():
             print(dispo, end=' ')
         print("]")
 
-
-
+# Classe représentant une promotion
 class Promotion():
     def __init__(self,name,nb_eleves,listeMatiere):
         self.name=name
         self.nb_eleves=nb_eleves
         self.listeMatiere=listeMatiere
 
-    #getter setter et toString
+    #getter setter et toString pour chaque attribut
     @property
     def name(self):
         return self._name
@@ -192,6 +195,7 @@ class Promotion():
     def listeMatiere(self):
         del self._listeMatiere
 
+    # Méthode pour afficher les informations d'une promotion
     def afficherPromotion(self):
         print(self.name,end=', ')# end='' sert à ne pas retrouner à la ligne avec le print
         print(self.nb_eleves,end=', ')
@@ -200,6 +204,7 @@ class Promotion():
             print(matiere.name,end=', ')
         print("]")
 
+# Classe représentant une session d'examen
 class Session():
     def __init__(self,couleur,listeMatiere):
         self.listeMatiere=listeMatiere
@@ -229,6 +234,7 @@ class Session():
     def listeMatiere(self):
         del self._listeMatiere
 
+    # Méthode pour afficher les informations d'une session
     def afficherSession(self):
         print(self.couleur) # end='' sert à ne pas retourner à la ligne avec le print
         print("[ ",end='')
@@ -242,8 +248,9 @@ class Session():
             liste.append(matiere)
         return (self.couleur, liste)
 #------------------------------------------#
-matieres = []
 
+# Lecture des matières à partir d'un fichier CSV
+matieres = []
 with open('Matières.csv', mode='r', newline='') as csvfile:
     csvreader = csv.DictReader(csvfile)
     for row in csvreader:
@@ -251,14 +258,14 @@ with open('Matières.csv', mode='r', newline='') as csvfile:
             name=row['nom'],
             duree=int(row['duree']),
             listeSalles=[],
-            aretes=[],
-            degreSaturation=0,
-            couleur=0
+            aretes=[], # Initialisation des arêtes à une liste vide
+            degreSaturation=0, # Initialisation du degré de saturation à 0
+            couleur=0 # Initialisation de la couleur à 0
         )
         matieres.append(matiere)
 
+# Lecture des promotions à partir d'un fichier CSV
 promotions = []
-
 with open('Promotions.csv', mode='r', newline='') as csvfile:
     csvreader = csv.DictReader(csvfile)
     for row in csvreader:
@@ -277,6 +284,7 @@ with open('Promotions.csv', mode='r', newline='') as csvfile:
 #for promotion in promotions:
 #    promotion.afficherPromotion()
 
+# Lecture des salles à partir d'un fichier CSV
 salles = []
 with open('Salles.csv', mode='r', newline='') as csvfile:
     reader = csv.DictReader(csvfile)
@@ -309,16 +317,17 @@ with open('Salles.csv', mode='r', newline='') as csvfile:
 #dans la partie du code qui va suivre, on va parcourir les promotions pour créer les arêtes des matières. Une arête représente le fait que les deux matières ne puissent pas se dérouler sur la même session
 
 
-
+# Création des arêtes pour chaque matière
 for promo in promotions :
-   matpromo=promo.listeMatiere #on récupère la liste des matières de la promo
-   for i in range(len(matpromo)): #on traite les matières une par une
+   matpromo=promo.listeMatiere # Récupération de la liste des matières de la promo
+   for i in range(len(matpromo)): # Parcours des matières de la promotion une par une
        for j in range (i+1, len(matpromo)):
            if matpromo[j] not in matpromo[i].aretes : #on vérifie que l'arête n'existe pas déjà
                matpromo[i].aretes.append(matpromo[j])
                matpromo[j].aretes.append(matpromo[i]) #ici on a les matières i et j qui sont enseignées dans une promo donc les examens ne peuvent pas se dérouler en même temps, donc on ajoute j dans les arêtes de i et i dans les arêtes de j
 #nbPromo*nbMatPromo*nbmatpromo
 
+# Fonction pour trouver la matière avec le degré de saturation maximal
 def mat_deg_max():
     max=-1
     deg=-1
@@ -330,34 +339,40 @@ def mat_deg_max():
     return mat
 
 sessions=[]
-
 compteur=0
+
+# Boucle pour colorier les matières en utilisant l'algorithme Dsatur
 while compteur<len(matieres):
     compteur+=1
-    encours=mat_deg_max()
+    encours=mat_deg_max() # Récupération de la matière avec le degré de saturation maximal
     coul=1
     ok=True
-    couleurs=[0 for k in range (len(matieres))]
-    for mat in encours.aretes :
+    couleurs=[0 for k in range (len(matieres))] # Initialisation des couleurs disponibles, len(matieres) est le nombre max de couleurs qu'on pourra utiliser, il n'est généralement jamais atteint
+
+    for mat in encours.aretes : # Parcours des arêtes de la matière courante
         if mat.couleur==1:
             ok=False
         if mat.couleur>0:
             couleurs[mat.couleur - 1]=1
-    if not ok:
+
+    if not ok : #
         ind=0
         while couleurs[ind]==1:
             ind+=1
         coul=ind+1
-    encours.couleur=coul
+    encours.couleur=coul # Assigner la couleur à la matière courante
+
     trouve=False
     for ses in sessions :
         if ses.couleur==coul:
             ses.listeMatiere.append(encours)
             trouve=True
-    if not trouve:
+
+    if not trouve: # Si aucune session de même couleur n'est trouvée, créer une nouvelle session
         ses=Session(couleur=coul, listeMatiere=[encours])
         sessions.append(ses)
-    for mat in encours.aretes :
+
+    for mat in encours.aretes : # Augmenter le degré de saturation des matières voisines
             mat.degreSaturation += 1
 
 """
@@ -366,10 +381,13 @@ for ses in sessions:
     ses.afficherSession()
 """
 
+# Conversion des sessions en dictionnaire
 dic = {}
 for ses in sessions:
     (a,b) = ses.returnSession()
     dic[a] = b
+
+# Fonction qui réparti les sessions de matières sur plusieurs jours en fonction de leur nombre
 
 def emploiDuTemps(dico_matiere):
     jours = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"]
@@ -405,12 +423,11 @@ def emploiDuTemps(dico_matiere):
                 index += 1
             else:
                 break
-
     return emploi
-
 
 emploidutemps = emploiDuTemps(dic)
 
+# Fonction pour afficher l'emploi du temps
 def afficher_emploi_du_temps(emploidutemps):
     for jour, sessions_jour in emploidutemps.items():
         print(f"{jour.capitalize()} : ", end="")
@@ -426,6 +443,7 @@ def afficher_emploi_du_temps(emploidutemps):
 # Appel de la fonction pour afficher l'emploi du temps
 #afficher_emploi_du_temps(emploidutemps)
 
+# Fonction pour assigner les salles aux matières
 def assignation_salle(emploidutemps, promotions, salles):
     resultat = {}
     jours = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi']
@@ -437,7 +455,7 @@ def assignation_salle(emploidutemps, promotions, salles):
 
         for session in sessions_jour:
             salles_utilisees = []
-            heuredepart=max_heure_fin
+            heuredepart=max_heure_fin # Réinitialiser l'heure de départ à la dernière heure de fin
 
             for matiere in session:
                 duree_matiere = matiere.duree
@@ -453,56 +471,59 @@ def assignation_salle(emploidutemps, promotions, salles):
                 liste_nb_eleve = []
                 liste_salles = []
 
-                for salle in salles:
-                    if salle in salles_utilisees:
+                for salle in salles :
+                    if salle in salles_utilisees : # Ignorer les salles déjà utilisées
                         continue
 
-                    liste_dispo = salle.listeDisponibilite[jours.index(jour)]
+                    liste_dispo = salle.listeDisponibilite[jours.index(jour)] # Récupère la disponibilité de la salle
                     debut_session = -1
 
                     #print(heuredepart)
 
-                    test=(heuredepart-510)//30
+                    test=(heuredepart-510)//30 # Calculer l'indice de départ pour la vérification des créneaux
 
                     try :
+                        # Parcourir la liste de disponibilité pour trouver un créneau libre
                         for i in range(test,len(liste_dispo)):
                             if liste_dispo[i] == 0:
                                 if debut_session == -1:
-                                    debut_session = i
+                                    debut_session = i # Marque le début d'un créneau libre
                             else:
                                 debut_session = -1
 
                             if debut_session != -1 and (i - debut_session + 1) == duree_matiere :
-                                if nb_eleve_restants <= salle.capacite:
+                                if nb_eleve_restants <= salle.capacite : # Si la salle peut contenir tous les élèves d'une promotion d'un coup
                                     for k in range(debut_session, debut_session + duree_matiere + 2) :
                                         liste_dispo[k] = 1
                                     liste_salles.append(salle)
                                     salles_utilisees.append(salle)
                                     liste_nb_eleve.append(nb_eleve_restants)
                                     heuredepart = 510 + debut_session * 30  # Calculer l'heure de début en fonction de la première disponibilité
-                                    nb_eleve_restants = 0
+                                    nb_eleve_restants = 0 # Tous les élèves d'une même promotion ont été placés
                                     break
 
+                                # Si la salle ne peut pas contenir tous les élèves, en placer autant que possible
                                 if nb_eleve_restants > salle.capacite:
                                     for k in range(debut_session, debut_session + duree_matiere + 2):
                                         liste_dispo[k] = 1
                                     liste_salles.append(salle)
                                     salles_utilisees.append(salle)
                                     liste_nb_eleve.append(salle.capacite)
-                                    nb_eleve_restants -= salle.capacite
+                                    nb_eleve_restants -= salle.capacite # Déduire le nombre d'élèves restants
                                     heuredepart = 510 + debut_session * 30
                                     break
 
                     except IndexError as e :
+                         # Gérer les erreurs dans le cas où il n'y a pas assez de créneaux pour la salle
                         print(f"IndexError: Il n'y a pas assez de créneau pour la {salle.name} le {jour}.")
                         print(f"Details: {str(e)}\n")
 
                         continue
 
-                    if nb_eleve_restants == 0:
+                    if nb_eleve_restants == 0 : # Si tous les élèves ont été placés
                         break
 
-                if nb_eleve_restants > 0:
+                if nb_eleve_restants > 0 : # Si tous les élèves n'ont pas pu être placés
                     print(f"Il n'y a pas assez de salles pour {matiere.name} le {jour}\n")
 
                 if liste_salles and heuredepart is not None:
@@ -514,6 +535,7 @@ def assignation_salle(emploidutemps, promotions, salles):
                     if heurefin>max_heure_fin*60:
                         max_heure_fin=heurefin*60
 
+                    # Formatage des heures de début et de fin
                     if heurefin % 1 == 0.5:
                         heurefin = str(int(heurefin // 1)) + "h30"
                     else:
@@ -523,7 +545,7 @@ def assignation_salle(emploidutemps, promotions, salles):
                     else:
                         heurededepart = str(int(heurededepart // 1)) + "h"
 
-                    slot_key = f"{heurededepart} jusqu'à {heurefin}"
+                    slot_key = f"{heurededepart} jusqu'à {heurefin}" # Création de la clé du créneau horaire
                     if slot_key not in resultat[jour] :
                         resultat[jour][slot_key] = []
 
@@ -535,9 +557,11 @@ def assignation_salle(emploidutemps, promotions, salles):
                                 promo.append(promotion.name)
                     """
 
+                    # Ajout des informations : nom de la matière, de la salle et du nombre d'élèves
                     for k in range(len(liste_salles)):
                         resultat[jour][slot_key].append(f"{matiere.name} - {liste_salles[k].name} : {liste_nb_eleve[k]}")
 
+    # Supprimer les jours sans sessions
     for jour in jours :
         if resultat[jour]=={} :
             del resultat[jour]
