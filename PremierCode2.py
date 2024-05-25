@@ -150,9 +150,9 @@ class Salle():
 
 
 class Promotion():
-    def __init__(self,name,nbEleves,listeMatiere):
+    def __init__(self,name,nbPlaces,listeMatiere):
         self.name=name
-        self.nbEleves=nbEleves
+        self.nbPlaces=nbPlaces
         self.listeMatiere=listeMatiere
 
     #getter setter et toString
@@ -169,16 +169,16 @@ class Promotion():
         del self._name
 
     @property
-    def nbEleves(self):
-        return self._nbEleves
+    def nbPlaces(self):
+        return self._nbPlaces
 
     @nbPlaces.setter
-    def nbEleves(self,value):
-        self._nbEleves = int(value)
+    def nbPlaces(self,value):
+        self._nbPlaces = int(value)
 
     @nbPlaces.deleter
-    def nbEleves(self):
-        del self._nbEleves
+    def nbPlaces(self):
+        del self._nbPlaces
 
     @property
     def listeMatiere(self):
@@ -517,7 +517,7 @@ def assignation_salle(emploidutemps, promotions, salles):
                         heuredepart = str(int(heuredepart // 1)) + "h"
 
                     slot_key = f"{heuredepart} jusqu'à {heurefin}"
-                    if slot_key not in resultat[jour]:
+                    if slot_key not in resultat[jour] :
                         resultat[jour][slot_key] = []
 
                     """
@@ -529,11 +529,12 @@ def assignation_salle(emploidutemps, promotions, salles):
                     """
 
                     for k in range(len(liste_salles)):
-                        resultat[jour][slot_key].append(f"{promo} - {matiere.name} - {liste_salles[k].name} : {liste_nb_eleve[k]}")
+                        resultat[jour][slot_key].append(f"{matiere.name} - {liste_salles[k].name} : {liste_nb_eleve[k]}")
+
     for jour in jours :
         if resultat[jour]=={} :
             del resultat[jour]
-            
+
     return resultat
 
 
