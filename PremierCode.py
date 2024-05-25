@@ -323,33 +323,6 @@ with open('Salles.csv', mode='r', newline='') as csvfile:
 
 #dans la partie du code qui va suivre, on va parcourir les promotions pour créer les arêtes des matières. Une arête représente le fait que les deux matières ne puissent pas se dérouler sur la même session
 
-# for matiere in matieres : #construction des aretes
-#     for promotion in promotions :
-#         liste_mat=[]
-#         for matpromo in promotion.listeMatiere :
-#             liste_mat.append(matpromo)
-#         if matiere.name in liste_mat :
-#             for m in liste_mat :
-#                 if m.name != matiere.name and m not in matiere.aretes :
-#                     matiere.aretes.append(m)
-#nbMat*nbPromo*nbMatPromo
-
-# for promotion in promotions :
-#     liste_mat=promotion.listeMatiere
-#     for m in liste_mat :
-#         if m.name != matiere.name and m not in matiere.aretes :
-#             matiere.aretes.append(m)
-
-
-
-# def mat_deg_max():
-#     max=0
-#     for matiere in matieres :
-#         if max < matiere.degres and matiere.couleur==0 :
-#             max = matiere.degres
-#             mat = matiere
-#     return mat
-
 for promo in promotions :
    matpromo=promo.listeMatiere #on récupère la liste des matières de la promo
    for i in range(len(matpromo)): #on traite les matières une par une
@@ -361,8 +334,8 @@ for promo in promotions :
 
 
 def mat_deg_max():
-    max=0
-    deg=0
+    max=-1
+    deg=-1
     for matiere in matieres :
         if matiere.couleur==0 and (max < matiere.degreSaturation or (max==matiere.degreSaturation and deg < len(matiere.aretes)))  :
             max = matiere.degreSaturation
