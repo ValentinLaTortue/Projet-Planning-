@@ -349,7 +349,7 @@ while compteur<len(matieres):
     ok=True
     couleurs=[0 for k in range (len(matieres))] # Initialisation des couleurs disponibles, len(matieres) est le nombre max de couleurs qu'on pourra utiliser, il n'est généralement jamais atteint
 
-    for mat in encours.aretes : # Parcours des arêtes de la matière courante
+    for mat in encours.aretes : # 
         if mat.couleur==1:
             ok=False
         if mat.couleur>0:
