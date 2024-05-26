@@ -552,39 +552,11 @@ print("\n")
 
 # Exemple d'utilisation
 resultat = assignation_salle(emploidutemps, promotions, salles)
-"""
-for jour, sessions in resultat.items():
-    print(f"{jour} :")
-    for horaire, matieres in sessions.items():
-        print(f"  {horaire} : {matieres}")
-"""
 for jour, sessions in resultat.items():
     print(f"{jour} :")
     for horaire, matieres in sessions.items():
         horaire=horaire.replace("jusqu'à","-")
         print(f"  {horaire} : {matieres}")
-
-
-#exemple (Un cadeau pour charlotte)
-"""
-tabJours = 
-[ 
-    [
-        [ heure1, liste de matière , salle  ],
-        [ heure2,  liste de matière , salle  ],
-        [ heure3, liste de matière , salle  ], 
-    ],
-
-    
-    [
-        [ heure1, [ liste de matière + salle ] ],
-        [ heure2, [ liste de matière + salle ] ],
-        [ heure3, [ liste de matière + salle ] ], 
-    ],
-
-]
-"""
-print("\n\n\n")
 
 
 tabLundi = []
@@ -620,12 +592,13 @@ Me="".join(tabMercredi)
 J="".join(tabJeudi)
 V="".join(tabVendredi)
 
+###################################################################################################################################""
+#Interface graphique
 
-print(L)
 #definitions des fonctions
 def login():
-    nom_utilisateur = "a"
-    mdp = "a"
+    nom_utilisateur = "admin"
+    mdp = "team4"
     if nom_u.get()==nom_utilisateur and mdp_u.get()==mdp:
         frame.place(x=0, y=0, width=1500, height=700)
         bouton_c.destroy()
@@ -687,25 +660,25 @@ mdp_u.place(x=760, y=255)
 
 frame = Frame(window, background='#9ADBFF', width=1500, height=700)
 
-bouton = Button(frame, text="Générer le planning des examens", font = ('Arial bold', 20), fg='black',bg='#445964', command=remplir)
+bouton = Button(frame, text="Cliquez afin de générer le planning d'examens", font = ('Arial bold', 20), fg='black',bg='#445964', command=remplir)
 bouton.pack(side='bottom', fill='x')
 
 label = Label(frame, text="Planning des examens de ArtSchool", font = ( "Arial Bold" , 30 ), fg='black',bg='#9ADBFF')
 label.pack()
 
-lundi = Label(frame, text="Lundi", font = ('Arial Bold', 15), fg='black',bg='#9ADBFF')
+lundi = Label(frame, text="Lundi", font = ('Arial Bold', 15, 'underline'), fg='black',bg='#9ADBFF')
 lundi.place(x=120, y=80)
 
-mardi = Label(frame, text="Mardi", font = ('Arial Bold', 15), fg='black',bg='#9ADBFF')
+mardi = Label(frame, text="Mardi", font = ('Arial Bold', 15, 'underline'), fg='black',bg='#9ADBFF')
 mardi.place(x=420, y=80)
 
-mercredi = Label(frame, text="Mercredi", font = ('Arial Bold', 15), fg='black',bg='#9ADBFF')
+mercredi = Label(frame, text="Mercredi", font = ('Arial Bold', 15, 'underline'), fg='black',bg='#9ADBFF')
 mercredi.place(x=715, y=80)
 
-jeudi = Label(frame, text="Jeudi", font = ('Arial Bold', 15), fg='black',bg='#9ADBFF')
+jeudi = Label(frame, text="Jeudi", font = ('Arial Bold', 15, 'underline'), fg='black',bg='#9ADBFF')
 jeudi.place(x=1020, y=80)
 
-vendredi = Label(frame, text="Vendredi", font = ('Arial Bold', 15), fg='black',bg='#9ADBFF')
+vendredi = Label(frame, text="Vendredi", font = ('Arial Bold', 15, 'underline'), fg='black',bg='#9ADBFF')
 vendredi.place(x=1320, y=80)
 
 trait1 = Label(frame, text="________________________________________________________________________________________________________________________________________", font = ('Arial', 15), fg='black',bg='#9ADBFF')
@@ -713,22 +686,22 @@ trait1.place(x=0, y=105)
 
 lundi1 = Text(frame, fg='black',bg='#9ADBFF')
 lundi1.config(font = ('Arial', 15)) 
-lundi1.place(x=5, y=160, width=295, height=480)
+lundi1.place(x=5, y=135, width=295, height=505)
 
 mardi1 = Text(frame, fg='black',bg='#9ADBFF')
 mardi1.config(font = ('Arial', 15))
-mardi1.place(x=305, y=160, width=295, height=480)
+mardi1.place(x=305, y=135, width=295, height=505)
 
 mercredi1 = Text(frame, fg='black',bg='#9ADBFF')
 mercredi1.config(font = ('Arial', 15))
-mercredi1.place(x=605, y=160, width=295, height=480)
+mercredi1.place(x=605, y=135, width=295, height=505)
 
 jeudi1 = Text(frame, fg='black',bg='#9ADBFF')
 jeudi1.config(font = ('Arial', 15))
-jeudi1.place(x=905, y=160, width=295, height=480)
+jeudi1.place(x=905, y=135, width=295, height=505)
 
 vendredi1 = Text(frame, fg='black',bg='#9ADBFF')
 vendredi1.config(font = ('Arial', 15))
-vendredi1.place(x=1205, y=160, width=293, height=480)
+vendredi1.place(x=1205, y=135, width=293, height=505)
 
 window.mainloop()
