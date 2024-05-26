@@ -19,11 +19,11 @@ def login():
     return 0
 
 def remplir():
-    liste = [ 'dessin salle1', 'peinture salle7' ]
-    lundi1.delete(0, END)
-    lundi1.insert(0, liste[0])
-    lundi2.delete(0, END)
-    lundi2.insert(0, liste[1])
+    liste = [ "dessin salle1 dessin salle1 dessin salle1 dessin salle1 dessin salle1 dessin salle1", "peinture salle7" ]
+    lundi1.delete(0.0, END)
+    lundi1.insert(0.0, liste[0])
+    lundi2.delete(0.0, END)
+    lundi2.insert(0.0, liste[1])
 
 #fenetre principale
 window = Tk()
@@ -86,10 +86,12 @@ lundi_m.place(x=120, y=135)
 lundi_a = Label(frame, text="Après-midi", font = ('Arial', 15), fg='black',bg='#9ADBFF')
 lundi_a.place(x=95, y=390)
 
-lundi1 = Entry(frame, font = ('Arial', 15), fg='black',bg='#9ADBFF')
+lundi1 = Text(frame, fg='black',bg='#9ADBFF')
+lundi1.config(font = ('Arial', 15)) 
 lundi1.place(x=5, y=160, width=300, height=200)
 
-lundi2 = Entry(frame, font = ('Arial', 15), fg='black',bg='#9ADBFF')
+lundi2 = Text(frame, fg='black',bg='#9ADBFF')
+lundi2.config(font = ('Arial', 15))
 lundi2.place(x=5, y=420, width=300, height=200)
 
 mardi_m = Label(frame, text="Matin", font = ('Arial', 15), fg='black',bg='#9ADBFF')
@@ -98,10 +100,12 @@ mardi_m.place(x=420, y=135)
 mardi_a = Label(frame, text="Après-midi", font = ('Arial', 15), fg='black',bg='#9ADBFF')
 mardi_a.place(x=395, y=390)
 
-mardi1 = Entry(frame, font = ('Arial', 15), fg='black',bg='#9ADBFF')
+mardi1 = Text(frame, fg='black',bg='#9ADBFF')
+mardi1.config(font = ('Arial', 15))
 mardi1.place(x=305, y=160, width=300, height=200)
 
-mardi2 = Entry(frame, font = ('Arial', 15), fg='black',bg='#9ADBFF')
+mardi2 = Text(frame, fg='black',bg='#9ADBFF')
+mardi2.config(font = ('Arial', 15))
 mardi2.place(x=305, y=420, width=300, height=200)
 
 mercredi_m = Label(frame, text="Matin", font = ('Arial', 15), fg='black',bg='#9ADBFF')
@@ -110,10 +114,12 @@ mercredi_m.place(x=728, y=135)
 mercredi_a = Label(frame, text="Après-midi", font = ('Arial', 15), fg='black',bg='#9ADBFF')
 mercredi_a.place(x=698, y=390)
 
-mercredi1 = Entry(frame, font = ('Arial', 15), fg='black',bg='#9ADBFF')
+mercredi1 = Text(frame, fg='black',bg='#9ADBFF')
+mercredi1.config(font = ('Arial', 15))
 mercredi1.place(x=605, y=160, width=300, height=200)
 
-mercredi2 = Entry(frame, font = ('Arial', 15), fg='black',bg='#9ADBFF')
+mercredi2 = Text(frame, fg='black',bg='#9ADBFF')
+mercredi2.config(font = ('Arial', 15))
 mercredi2.place(x=605, y=420, width=300, height=200)
 
 jeudi_m = Label(frame, text="Matin", font = ('Arial', 15), fg='black',bg='#9ADBFF')
@@ -122,10 +128,12 @@ jeudi_m.place(x=1020, y=135)
 jeudi_a = Label(frame, text="Après-midi", font = ('Arial', 15), fg='black',bg='#9ADBFF')
 jeudi_a.place(x=995, y=390)
 
-jeudi1 = Entry(frame, font = ('Arial', 15), fg='black',bg='#9ADBFF')
+jeudi1 = Text(frame, fg='black',bg='#9ADBFF')
+jeudi1.config(font = ('Arial', 15))
 jeudi1.place(x=905, y=160, width=300, height=200)
 
-jeudi2 = Entry(frame, font = ('Arial', 15), fg='black',bg='#9ADBFF')
+jeudi2 = Text(frame, fg='black',bg='#9ADBFF')
+jeudi2.config(font = ('Arial', 15))
 jeudi2.place(x=905, y=420, width=300, height=200)
 
 vendredi_m = Label(frame, text="Matin", font = ('Arial', 15), fg='black',bg='#9ADBFF')
@@ -134,10 +142,12 @@ vendredi_m.place(x=1330, y=135)
 vendredi_a = Label(frame, text="Après-midi", font = ('Arial', 15), fg='black',bg='#9ADBFF')
 vendredi_a.place(x=1305, y=390)
 
-vendredi1 = Entry(frame, font = ('Arial', 15), fg='black',bg='#9ADBFF')
+vendredi1 = Text(frame, fg='black',bg='#9ADBFF')
+vendredi1.config(font = ('Arial', 15))
 vendredi1.place(x=1205, y=160, width=293, height=200)
 
-vendredi2 = Entry(frame, font = ('Arial', 15), fg='black',bg='#9ADBFF')
+vendredi2 = Text(frame, fg='black',bg='#9ADBFF')
+vendredi2.config(font = ('Arial', 15))
 vendredi2.place(x=1205, y=420, width=293, height=200)
 
 
