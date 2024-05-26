@@ -241,13 +241,7 @@ class Session():
         for matiere in self.listeMatiere:
             print(matiere.name,end=' ')
         print("]")
-#------------------------------------------#
-    def returnSession(self):
-        liste = []
-        for matiere in self.listeMatiere:
-            liste.append(matiere)
-        return (self.couleur, liste)
-#------------------------------------------#
+
 
 # Lecture des matières à partir d'un fichier CSV
 matieres = []
@@ -303,17 +297,6 @@ with open('Salles.csv', mode='r', newline='') as csvfile:
     #print()
 ######## main ############
 
-#ici on introduira le code de Sarah et Charlotte qui liront le csv et fourniront une liste de salles, une liste de matières et une liste de promotions.
-#Tous les attributs des promotions seront remplis et on n'y touchera plus.
-#Tous les attributs des salles seront remplis et seuls les disponibilités seront modifés par la partie de Bertrand.
-#Le nom et la duree des matières seront remplis et on n'y touchera plus, la liste des salles sera rempli dans la partie de Bertrand et intialisé à une liste vide, les arêtes et le degré de saturation seront respectivement initialisés à une liste vide et 0.
-
-
-#on suppose
-#matieres #liste de matières
-#promotions #liste de promotions
-#salles #liste de salles
-
 #dans la partie du code qui va suivre, on va parcourir les promotions pour créer les arêtes des matières. Une arête représente le fait que les deux matières ne puissent pas se dérouler sur la même session
 
 
@@ -325,14 +308,14 @@ for promo in promotions :
            if matpromo[j] not in matpromo[i].aretes : #on vérifie que l'arête n'existe pas déjà
                matpromo[i].aretes.append(matpromo[j])
                matpromo[j].aretes.append(matpromo[i]) #ici on a les matières i et j qui sont enseignées dans une promo donc les examens ne peuvent pas se dérouler en même temps, donc on ajoute j dans les arêtes de i et i dans les arêtes de j
-#nbPromo*nbMatPromo*nbmatpromo
+#complexité : nbPromo*nbMatPromo*nbmatpromo
 
 # Fonction pour trouver la matière avec le degré de saturation maximal
 def mat_deg_max():
     max=-1
     deg=-1
     for matiere in matieres :
-        if matiere.couleur==0 and (max < matiere.degreSaturation or (max==matiere.degreSaturation and deg < len(matiere.aretes)))  :
+        if matiere.couleur==0 and (max < matiere.degreSaturation or (max==matiere.degreSaturation and deg < len(matiere.aretes)))  : #on s'assure que le sommet n'a pas déjà été traité et que soit son degré de saturation est strictement supérieur à ceux des sommets d'avant, soit son degré de saturation est égale au maximum des degrés de saturation des sommets d'avant mais son degré est strictement supérieur.
             max = matiere.degreSaturation
             deg = len(matiere.aretes)
             mat = matiere
@@ -349,21 +332,21 @@ while compteur<len(matieres):
     ok=True
     couleurs=[0 for k in range (len(matieres))] # Initialisation des couleurs disponibles, len(matieres) est le nombre max de couleurs qu'on pourra utiliser, il n'est généralement jamais atteint
 
-    for mat in encours.aretes : # 
-        if mat.couleur==1:
+    for mat in encours.aretes : #on parcourt les voisons du sommet en cours
+        if mat.couleur==1: #si la couleur 1 est déjà utilisée par les voisins, on ne peut pas utiliser la couleur 1
             ok=False
-        if mat.couleur>0:
-            couleurs[mat.couleur - 1]=1
+        if mat.couleur>0: #on remplit le tableau des couleurs des voisins
+            couleurs[mat.couleur - 1]=1 #comme python utilise des indices débutant à 0 et que 0 représente un sommet non coloré pour nous, on décale les indices de 1. C'est à dire que si couleurs[i]=1, la couleur i+1 est utilisé par un des voisins du sommet
 
-    if not ok : #
+    if not ok : #si la couleur 1 est déjà utilisé par un voisin
         ind=0
-        while couleurs[ind]==1:
+        while couleurs[ind]==1: #on parcourt notre tableau des couleurs jusqu'à trouver un 0, c'est-à-dire une couleur non utilisée
             ind+=1
-        coul=ind+1
+        coul=ind+1 #on décale l'indice de 1 car la couleur 0 ne nous intéresse pas
     encours.couleur=coul # Assigner la couleur à la matière courante
 
     trouve=False
-    for ses in sessions :
+    for ses in sessions : #on regarde si une session de cette couleur existe déjà
         if ses.couleur==coul:
             ses.listeMatiere.append(encours)
             trouve=True
@@ -384,7 +367,7 @@ for ses in sessions:
 # Conversion des sessions en dictionnaire
 dic = {}
 for ses in sessions:
-    (a,b) = ses.returnSession()
+    (a,b) = ses.couleur,ses.listeMatiere
     dic[a] = b
 
 # Fonction qui réparti les sessions de matières sur plusieurs jours en fonction de leur nombre
@@ -405,7 +388,7 @@ def emploiDuTemps(dico_matiere):
         reste_arrondi = last_key // 5
 
     # Si le reste est supérieur ou égal à 4, ajouter samedi
-    if reste >= 4:
+    if reste_arrondi >= 4:
         jours.append("samedi")
 
     # Créer un nouveau dictionnaire pour l'emploi du temps
@@ -450,8 +433,7 @@ def assignation_salle(emploidutemps, promotions, salles):
 
     for jour, sessions_jour in emploidutemps.items():
         resultat[jour] = {}
-        heuredepart = 510  # Réinitialiser l'heure de départ à 8h30 chaque jour
-        max_heure_fin=510
+        max_heure_fin=510 # Réinitialiser l'heure de départ à 8h30 chaque jour
 
         for session in sessions_jour:
             salles_utilisees = []
@@ -478,45 +460,41 @@ def assignation_salle(emploidutemps, promotions, salles):
                     liste_dispo = salle.listeDisponibilite[jours.index(jour)] # Récupère la disponibilité de la salle
                     debut_session = -1
 
-                    #print(heuredepart)
+                    ind_dep=(heuredepart-510)//30 # Calculer l'indice de départ pour la vérification des créneaux
 
-                    test=(heuredepart-510)//30 # Calculer l'indice de départ pour la vérification des créneaux
+                    # Parcourir la liste de disponibilité pour trouver un créneau libre
+                    for i in range(ind_dep,len(liste_dispo)):
+                        if liste_dispo[i] == 0:
+                            if debut_session == -1:
+                                debut_session = i # Marque le début d'un créneau libre
+                        else:
+                            debut_session = -1 # Le créneau disponible dans cette salle n'est pas assez long pour la matière, on teste à un nouvel horaire
 
-                    try :
-                        # Parcourir la liste de disponibilité pour trouver un créneau libre
-                        for i in range(test,len(liste_dispo)):
-                            if liste_dispo[i] == 0:
-                                if debut_session == -1:
-                                    debut_session = i # Marque le début d'un créneau libre
-                            else:
-                                debut_session = -1
+                        if debut_session != -1 and (i - debut_session + 1) == duree_matiere : #le créneau est suffisamment long, on va utiliser cette salle
+                            if nb_eleve_restants <= salle.capacite and (debut_session + duree_matiere)<=len(liste_dispo): # Si la salle peut contenir tous les élèves d'une promotion d'un coup et qu'il y a suffisamment de créneau dans la journée pour cette salle
+                                if (debut_session + duree_matiere)==len(liste_dispo) or (debut_session + duree_matiere)==len(liste_dispo)-1: #si le créneau est en fin de journée, on ne rajoute pas de pause après l'épreuve
+                                    fin=debut_session + duree_matiere
+                                else :
+                                    fin= debut_session + duree_matiere + 2 #sinon on rajoute 1h de pause
+                                for k in range(debut_session,fin) :
+                                    liste_dispo[k] = 1 # on rend la salle indisponible sur ce créneau
+                                liste_salles.append(salle)
+                                salles_utilisees.append(salle)
+                                liste_nb_eleve.append(nb_eleve_restants)
+                                heuredepart = 510 + debut_session * 30  # Calculer l'heure de début en fonction de la première disponibilité
+                                nb_eleve_restants = 0 # Tous les élèves d'une même promotion ont été placés
+                                break
 
-                            if debut_session != -1 and (i - debut_session + 1) == duree_matiere :
-                                if nb_eleve_restants <= salle.capacite : # Si la salle peut contenir tous les élèves d'une promotion d'un coup
-                                    for k in range(debut_session, debut_session + duree_matiere + 2) :
-                                        liste_dispo[k] = 1
-                                    liste_salles.append(salle)
-                                    salles_utilisees.append(salle)
-                                    liste_nb_eleve.append(nb_eleve_restants)
-                                    heuredepart = 510 + debut_session * 30  # Calculer l'heure de début en fonction de la première disponibilité
-                                    nb_eleve_restants = 0 # Tous les élèves d'une même promotion ont été placés
-                                    break
-
-                                # Si la salle ne peut pas contenir tous les élèves, en placer autant que possible
-                                if nb_eleve_restants > salle.capacite:
-                                    for k in range(debut_session, debut_session + duree_matiere + 2):
-                                        liste_dispo[k] = 1
-                                    liste_salles.append(salle)
-                                    salles_utilisees.append(salle)
-                                    liste_nb_eleve.append(salle.capacite)
-                                    nb_eleve_restants -= salle.capacite # Déduire le nombre d'élèves restants
-                                    heuredepart = 510 + debut_session * 30
-                                    break
-
-                    except IndexError as e :
-                         # Gérer les erreurs dans le cas où il n'y a pas assez de créneaux pour la salle
-                        print(f"IndexError: Il n'y a pas assez de créneau pour la {salle.name} le {jour}.")
-                        print(f"Details: {str(e)}\n")
+                            # Si la salle ne peut pas contenir tous les élèves, en placer autant que possible
+                            if nb_eleve_restants > salle.capacite and (debut_session + duree_matiere + 2)<=len(liste_dispo):
+                                for k in range(debut_session, debut_session + duree_matiere + 2):
+                                    liste_dispo[k] = 1
+                                liste_salles.append(salle)
+                                salles_utilisees.append(salle)
+                                liste_nb_eleve.append(salle.capacite)
+                                nb_eleve_restants -= salle.capacite # Déduire le nombre d'élèves restants
+                                heuredepart = 510 + debut_session * 30
+                                break
 
                         continue
 
@@ -524,7 +502,7 @@ def assignation_salle(emploidutemps, promotions, salles):
                         break
 
                 if nb_eleve_restants > 0 : # Si tous les élèves n'ont pas pu être placés
-                    print(f"Il n'y a pas assez de salles pour {matiere.name} le {jour}\n")
+                    print(f"Il n'y a pas assez de salles ou les salles ne sont pas assez disponibles pour {matiere.name} le {jour}\n")
 
                 if liste_salles and heuredepart is not None:
                     heurefin = (heuredepart + duree_matiere * 30) / 60
