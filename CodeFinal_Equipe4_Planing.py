@@ -548,16 +548,8 @@ def assignation_salle(emploidutemps, promotions, salles):
 
     return resultat
 
-print("\n")
 
-# Exemple d'utilisation
 resultat = assignation_salle(emploidutemps, promotions, salles)
-for jour, sessions in resultat.items():
-    print(f"{jour} :")
-    for horaire, matieres in sessions.items():
-        horaire=horaire.replace("jusqu'à","-")
-        print(f"  {horaire} : {matieres}")
-
 
 tabLundi = []
 tabMardi = []
